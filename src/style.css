@@ -32,11 +32,8 @@ svg {
   font-size: 12pt;
 }
 
-.axis--y .axis-title-pos {
-  transform: translate(50%, 0);
-}
-
-.axis--y .axis-title-text {
-  font-size: 16pt;
-  transform: rotate(0deg);
+.bar {
+  fill: #1f77b4;
+  stroke: white;
+  stroke-width: 0.125em;
 }

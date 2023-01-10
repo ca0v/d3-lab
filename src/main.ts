@@ -40,24 +40,20 @@ const maxPrice = d3.max(data, (d) => d.price)!
 // maxPrice to rounded up to nearest 100
 const maxPriceRounded = Math.ceil(maxPrice / 100) * 100
 
-const yScale = d3.scaleLinear().rangeRound([height, 0]).domain([0, maxPriceRounded])
+const yScale = d3
+  .scaleLinear()
+  .rangeRound([height, 0])
+  .domain([0, maxPriceRounded])
 
-// x-axis, bottom
-g.append("g")
-  .attr("class", "axis axis--x")
-  .attr("transform", `translate(0,${height})`)
-  .call(d3.axisBottom(xScale))
+const makeYLines = () =>
+  d3
+    .axisRight(yScale)
+    .ticks(5)
+    .tickSize(width)
+    .tickFormat(() => "")
 
-// y-axis with title
-g.append("g")
-  .attr("class", "axis axis--y")
-  .call(d3.axisLeft(yScale).ticks(5, ".0f"))
-  .append("g") // y axis title
-  .classed("axis-title-pos", true)
-  .append("text") // y axis title
-  .classed("axis-title-text", true)
-  .attr("text-anchor", "end")
-  .text("Price (USD)") // title
+// draw horizontal lines
+g.append("g").attr("class", "grid").call(makeYLines())
 
 g.selectAll(".bar")
   .data(data)
@@ -78,7 +74,18 @@ g.selectAll(".bar-label")
   .attr("y", (d) => yScale(d.price) - 10)
   .text((d) => d.price.toFixed(2))
 
-  function nameOfMonth(date: Date): any {
+// x-axis, bottom
+g.append("g")
+  .attr("class", "axis axis--x")
+  .attr("transform", `translate(0,${height})`)
+  .call(d3.axisBottom(xScale))
+
+// y-axis with title
+g.append("g")
+  .attr("class", "axis axis--y")
+  .call(d3.axisLeft(yScale).ticks(5, ".0f"))
+
+function nameOfMonth(date: Date): any {
   const monthNames = [
     "January",
     "February",
