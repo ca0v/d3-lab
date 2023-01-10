@@ -69,7 +69,16 @@ g.selectAll(".bar")
   .attr("width", xScale.bandwidth())
   .attr("height", (d) => height - yScale(d.price))
 
-function nameOfMonth(date: Date): any {
+g.selectAll(".bar-label")
+  .data(data)
+  .enter()
+  .append("text")
+  .attr("class", "bar-label")
+  .attr("x", (d) => xScale(d.date)!)
+  .attr("y", (d) => yScale(d.price) - 10)
+  .text((d) => d.price.toFixed(2))
+
+  function nameOfMonth(date: Date): any {
   const monthNames = [
     "January",
     "February",
