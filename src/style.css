@@ -37,3 +37,24 @@ svg {
   stroke: white;
   stroke-width: 0.125em;
 }
+
+.grid {
+  padding-left: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 9rem);
+  grid-gap: 1rem;
+}
+
+.grid > .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid white;
+}
+
+.currency {
+  text-align: right;
+}
+
+.date {
+  text-align: left;
+}
