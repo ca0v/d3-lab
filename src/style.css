@@ -1,16 +1,11 @@
-body {
-  /* fill the viewport */
-  height: 100vh;
-  width: 100vw;
-  /* center the content */
+#app {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 
 svg {
-  width: 75vw;
-  height: 75vh;
+  width: 100%;
+  height: auto;
   padding-bottom: 2rem;
 }
 
@@ -37,6 +32,11 @@ svg {
   font-size: 12pt;
 }
 
-.axis--y .axis-title {
+.axis--y .axis-title-pos {
+  transform: translate(50%, 0);
+}
+
+.axis--y .axis-title-text {
   font-size: 16pt;
+  transform: rotate(0deg);
 }
