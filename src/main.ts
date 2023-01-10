@@ -30,33 +30,32 @@ const g = svg
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-const x = d3
+const xScale = d3
   .scaleBand()
   .rangeRound([0, width])
-  .padding(0.1)
+  .padding(0.3)
   .domain(data.map((d) => d.date))
 
 const maxPrice = d3.max(data, (d) => d.price)!
 // maxPrice to rounded up to nearest 100
 const maxPriceRounded = Math.ceil(maxPrice / 100) * 100
 
-const y = d3.scaleLinear().rangeRound([height, 0]).domain([0, maxPriceRounded])
+const yScale = d3.scaleLinear().rangeRound([height, 0]).domain([0, maxPriceRounded])
 
 // x-axis, bottom
 g.append("g")
   .attr("class", "axis axis--x")
   .attr("transform", `translate(0,${height})`)
-  .call(d3.axisBottom(x))
+  .call(d3.axisBottom(xScale))
 
 // y-axis with title
 g.append("g")
   .attr("class", "axis axis--y")
-  .call(d3.axisLeft(y).ticks(5, ".0f"))
+  .call(d3.axisLeft(yScale).ticks(5, ".0f"))
   .append("g") // y axis title
-  .attr("transform", `translate(${-margin.left}, ${height / 2 - margin.top})`)
+  .classed("axis-title-pos", true)
   .append("text") // y axis title
-  .attr("transform", "rotate(-90)")
-  .classed("axis-title", true)
+  .classed("axis-title-text", true)
   .attr("text-anchor", "end")
   .text("Price (USD)") // title
 
@@ -65,10 +64,10 @@ g.selectAll(".bar")
   .enter()
   .append("rect")
   .attr("class", "bar")
-  .attr("x", (d) => x(d.date)!)
-  .attr("y", (d) => y(d.price))
-  .attr("width", x.bandwidth())
-  .attr("height", (d) => height - y(d.price))
+  .attr("x", (d) => xScale(d.date)!)
+  .attr("y", (d) => yScale(d.price))
+  .attr("width", xScale.bandwidth())
+  .attr("height", (d) => height - yScale(d.price))
 
 function nameOfMonth(date: Date): any {
   const monthNames = [
