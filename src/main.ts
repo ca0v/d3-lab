@@ -9,17 +9,21 @@ const data = [
   { date: "2018-04-01", price: 400 },
   { date: "2018-05-01", price: 500 },
   { date: "2018-06-01", price: 450 },
-  { date: "2018-07-01", price: 700 },
+  { date: "2018-07-01", price: 440 },
   { date: "2018-08-01", price: 390 },
   { date: "2018-09-01", price: 500 },
   { date: "2018-10-01", price: 700 },
   { date: "2018-11-01", price: 800 },
   { date: "2018-12-01", price: 850 },
-]
+].map((v) => ({
+  ...v,
+  price: v.price + Math.round(Math.random() * 100 - 50) / 100,
+  date: nameOfMonth(new Date(v.date)),
+}))
 
 // create a bar chart
 const svg = d3.select("svg")
-const margin = { top: 20, right: 20, bottom: 30, left: 40 }
+const margin = { top: 20, right: 20, bottom: 60, left: 60 }
 const width = +svg.attr("width") - margin.left - margin.right
 const height = +svg.attr("height") - margin.top - margin.bottom
 const g = svg
@@ -33,23 +37,28 @@ const x = d3
   .domain(data.map((d) => d.date))
 
 const maxPrice = d3.max(data, (d) => d.price)!
+// maxPrice to rounded up to nearest 100
+const maxPriceRounded = Math.ceil(maxPrice / 100) * 100
 
-const y = d3.scaleLinear().rangeRound([height, 0]).domain([0, maxPrice])
+const y = d3.scaleLinear().rangeRound([height, 0]).domain([0, maxPriceRounded])
 
+// x-axis, bottom
 g.append("g")
   .attr("class", "axis axis--x")
-  .attr("transform", "translate(0," + height + ")")
+  .attr("transform", `translate(0,${height})`)
   .call(d3.axisBottom(x))
 
+// y-axis with title
 g.append("g")
   .attr("class", "axis axis--y")
-  .call(d3.axisLeft(y).ticks(10, "$"))
-  .append("text")
+  .call(d3.axisLeft(y).ticks(5, ".0f"))
+  .append("g") // y axis title
+  .attr("transform", `translate(${-margin.left}, ${height / 2 - margin.top})`)
+  .append("text") // y axis title
   .attr("transform", "rotate(-90)")
-  .attr("y", 6)
-  .attr("dy", "0.71em")
+  .classed("axis-title", true)
   .attr("text-anchor", "end")
-  .text("Price")
+  .text("Price (USD)") // title
 
 g.selectAll(".bar")
   .data(data)
@@ -61,4 +70,24 @@ g.selectAll(".bar")
   .attr("width", x.bandwidth())
   .attr("height", (d) => height - y(d.price))
 
+function nameOfMonth(date: Date): any {
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ]
+
+  // get month in zulu time
+  const month = date.getUTCMonth()
+  return monthNames[month]
+}
 // Path: index.html
